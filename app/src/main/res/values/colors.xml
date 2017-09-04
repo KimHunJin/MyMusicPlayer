@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FDA729</color>
+    <color name="colorPrimaryDark">#F68C1F</color>
+    <color name="colorAccent">#EEF66C</color>
+
+    <color name="colorWhite">#FFFFFF</color>
+    
+    <color name="colorHighlight">#90A4AE</color>
+
+    <color name="colorOriginal">#3F51B5</color>
+    <color name="colorOriginalDark">#303F9F</color>
+    <color name="colorOriginalAccent">#FF4081</color>
+</resources>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_item_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    android:padding="2dp">
+
+    <ImageView
+        android:id="@+id/img_rcv_item_main_info_thumbnail"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_near_me_black_24dp" />
+
+    <ImageView
+        android:id="@+id/img_rcv_item_main_info_more"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_more_vert_black_24dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_marginLeft="16dp"
+        android:layout_toLeftOf="@id/img_rcv_item_main_info_more"
+        android:layout_toRightOf="@id/img_rcv_item_main_info_thumbnail"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_rcv_item_main_info_music_title"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="sing"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/txt_rcv_item_main_info_music_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorOriginal"
+            android:lines="1"
+            android:text="artist"
+            android:textSize="14dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>
