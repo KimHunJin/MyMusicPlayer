@@ -31,5 +31,7 @@ interface MainMusicContract {
 
         fun mainAdapterRemoveItem()
 
+        fun mainAdapterMoreItemClick(position: Int, order: Int)
+
     }
 }

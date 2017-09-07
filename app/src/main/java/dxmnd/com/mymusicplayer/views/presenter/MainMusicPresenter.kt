@@ -40,6 +40,22 @@ class MainMusicPresenter : MainMusicContract.presenter {
         }
     }
 
+    override fun mainAdapterMoreItemClick(position: Int, order: Int) {
+        mainModel?.getItem(position)?.let {
+            when (order) {
+                1 -> {
+                    //ToDo add current list
+                }
+                2 -> {
+                    //ToDo close
+                }
+                else -> {
+
+                }
+            }
+        }
+    }
+
     override fun mainAdapterRemoveItem() {
 
     }
