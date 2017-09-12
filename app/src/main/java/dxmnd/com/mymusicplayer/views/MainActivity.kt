@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity(), MainMusicContract.View {
 
     private val rcvMainMusicList by lazy { findViewById(R.id.rcv_main_music_list) as RecyclerView }
     private val fabMainMusicAdd by lazy { findViewById(R.id.fab_main_music_add) as FloatingActionButton }
-    private val toolbarMain by lazy { findViewById(R.id.toolbar) as Toolbar }
+    private val toolbarMain by lazy { findViewById(R.id.toolbar_main) as Toolbar }
 
     private var mainMusicAdapter: MainRecyclerViewMusicAdapter? = null
     private var presenter: MainMusicContract.presenter? = null

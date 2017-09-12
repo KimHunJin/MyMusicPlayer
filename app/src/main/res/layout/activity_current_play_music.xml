@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="dxmnd.com.mymusicplayer.views.CurrentPlayMusicActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <include
+        android:id="@+id/layout_current_toolbar"
+        layout="@layout/toolbar_current_play_music" />
+
+    <RelativeLayout
+        android:id="@+id/fragment_container_current_play_music"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_current_toolbar">
+
+    </RelativeLayout>
+
+</RelativeLayout>
