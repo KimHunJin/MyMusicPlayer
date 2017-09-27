@@ -1,6 +1,6 @@
-package dxmnd.com.mymusicplayer.adapters.models
+package dxmnd.com.mymusicplayer.views.main.adapter.models
 
-import dxmnd.com.mymusicplayer.datas.MainMusicItem
+import dxmnd.com.mymusicplayer.datas.main.MainMusicItem
 
 /**
  * Created by HunJin on 2017-09-04.

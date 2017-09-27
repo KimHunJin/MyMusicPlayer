@@ -1,13 +1,13 @@
-package dxmnd.com.mymusicplayer.views.presenter
+package dxmnd.com.mymusicplayer.views.main.presenter
 
-import dxmnd.com.mymusicplayer.adapters.models.MainRecyclerViewModel
-import dxmnd.com.mymusicplayer.datas.MainMusicItem
+import dxmnd.com.mymusicplayer.views.main.adapter.models.MainRecyclerViewModel
+import dxmnd.com.mymusicplayer.datas.main.MainMusicItem
 
 /**
  * Created by HunJin on 2017-09-04.
  */
 
-class MainMusicPresenter : MainMusicContract.presenter {
+class MainMusicPresenter : MainMusicContract.Presenter {
 
     companion object {
         private val TAG = MainMusicPresenter::class.java.simpleName

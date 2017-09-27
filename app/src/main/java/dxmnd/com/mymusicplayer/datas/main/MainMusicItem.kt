@@ -1,4 +1,4 @@
-package dxmnd.com.mymusicplayer.datas
+package dxmnd.com.mymusicplayer.datas.main
 
 /**
  * Created by HunJin on 2017-08-24.

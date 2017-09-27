@@ -1,6 +1,6 @@
-package dxmnd.com.mymusicplayer.views.presenter
+package dxmnd.com.mymusicplayer.views.main.presenter
 
-import dxmnd.com.mymusicplayer.adapters.models.MainRecyclerViewModel
+import dxmnd.com.mymusicplayer.views.main.adapter.models.MainRecyclerViewModel
 
 /**
  * Created by HunJin on 2017-09-04.
@@ -17,7 +17,7 @@ interface MainMusicContract {
 
     }
 
-    interface presenter {
+    interface Presenter {
 
         var view: View?
 

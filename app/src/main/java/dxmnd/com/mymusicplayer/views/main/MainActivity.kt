@@ -1,4 +1,4 @@
-package dxmnd.com.mymusicplayer.views
+package dxmnd.com.mymusicplayer.views.main
 
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -8,9 +8,9 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.widget.Toast
 import dxmnd.com.mymusicplayer.R
-import dxmnd.com.mymusicplayer.adapters.MainRecyclerViewMusicAdapter
-import dxmnd.com.mymusicplayer.views.presenter.MainMusicContract
-import dxmnd.com.mymusicplayer.views.presenter.MainMusicPresenter
+import dxmnd.com.mymusicplayer.views.main.adapter.MainRecyclerViewMusicAdapter
+import dxmnd.com.mymusicplayer.views.main.presenter.MainMusicContract
+import dxmnd.com.mymusicplayer.views.main.presenter.MainMusicPresenter
 
 class MainActivity : AppCompatActivity(), MainMusicContract.View {
 
@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(), MainMusicContract.View {
     private val toolbarMain by lazy { findViewById(R.id.toolbar_main) as Toolbar }
 
     private var mainMusicAdapter: MainRecyclerViewMusicAdapter? = null
-    private var presenter: MainMusicContract.presenter? = null
+    private var Presenter: MainMusicContract.Presenter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,26 +34,26 @@ class MainActivity : AppCompatActivity(), MainMusicContract.View {
 
     private fun initialize() {
 
-        presenter = MainMusicPresenter()
-        presenter?.view = this
+        Presenter = MainMusicPresenter()
+        Presenter?.view = this
 
         mainMusicAdapter = MainRecyclerViewMusicAdapter(this)
 
-        presenter?.mainModel = mainMusicAdapter
+        Presenter?.mainModel = mainMusicAdapter
 
         rcvMainMusicList.setHasFixedSize(true)
         rcvMainMusicList.layoutManager = LinearLayoutManager(this)
         rcvMainMusicList.adapter = mainMusicAdapter
 
         mainMusicAdapter?.setOnClickListener {
-            presenter?.mainAdapterItemClick(it)
+            Presenter?.mainAdapterItemClick(it)
         }
 
         fabMainMusicAdd.setOnClickListener {
-            presenter?.mainAdapterAddItem()
+            Presenter?.mainAdapterAddItem()
         }
 
-        presenter?.loadDefaultItems()
+        Presenter?.loadDefaultItems()
     }
 
     override fun mainAdapterNotify() {

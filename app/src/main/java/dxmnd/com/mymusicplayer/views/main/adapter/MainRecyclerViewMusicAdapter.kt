@@ -1,19 +1,21 @@
-package dxmnd.com.mymusicplayer.adapters
+package dxmnd.com.mymusicplayer.views.main.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import dxmnd.com.mymusicplayer.adapters.holders.MainRecyclerViewMusicViewHolder
-import dxmnd.com.mymusicplayer.adapters.models.MainRecyclerViewModel
-import dxmnd.com.mymusicplayer.datas.MainMusicItem
+import dxmnd.com.mymusicplayer.adapters.BaseViewHolder
+import dxmnd.com.mymusicplayer.datas.main.MainMusicItem
 import dxmnd.com.mymusicplayer.listeners.OnItemClickListener
 import dxmnd.com.mymusicplayer.listeners.OnMenuClickListener
+import dxmnd.com.mymusicplayer.views.main.adapter.holders.MainRecyclerViewMusicViewHolder
+import dxmnd.com.mymusicplayer.views.main.adapter.models.MainRecyclerViewModel
 
 /**
  * Created by HunJin on 2017-08-23.
  */
 
-class MainRecyclerViewMusicAdapter(private val mContext: Context) : RecyclerView.Adapter<MainRecyclerViewMusicViewHolder>(), MainRecyclerViewModel {
+class MainRecyclerViewMusicAdapter(private val mContext: Context) : RecyclerView.Adapter<BaseViewHolder<MainMusicItem>>(), MainRecyclerViewModel {
+
 
     private var mainItemList: MutableList<MainMusicItem> = ArrayList()
 
@@ -22,6 +24,11 @@ class MainRecyclerViewMusicAdapter(private val mContext: Context) : RecyclerView
 
     var onMoreClickListener: OnMenuClickListener? = null
         private set
+
+    override fun onBindViewHolder(holder: BaseViewHolder<MainMusicItem>?, position: Int) {
+        holder?.itemView?.setOnClickListener { onItemClickListener?.onItemClick(position) }
+        holder?.bindView(getItem(position), position)
+    }
 
     fun setOnClickListener(listener: (Int) -> Unit) {
         this.onItemClickListener = object : OnItemClickListener {
@@ -41,10 +48,6 @@ class MainRecyclerViewMusicAdapter(private val mContext: Context) : RecyclerView
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MainRecyclerViewMusicViewHolder(mContext, parent, onMoreClickListener)
 
-    override fun onBindViewHolder(holder: MainRecyclerViewMusicViewHolder, position: Int) {
-        holder.itemView.setOnClickListener { onItemClickListener?.onItemClick(position) }
-        holder.bindView(getItem(position), position)
-    }
 
     override fun getItemCount() = mainItemList.size
 
