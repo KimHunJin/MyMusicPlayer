@@ -7,7 +7,7 @@
     tools:context="dxmnd.com.mymusicplayer.views.main.MainActivity">
 
     <include
-        android:id="@+id/toolbar_main"
+        android:id="@+id/layout_main_toolbar"
         layout="@layout/toolbar_main" />
 
     <include
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/layout_main_bottom"
-        android:layout_below="@id/toolbar_main">
+        android:layout_below="@id/layout_main_toolbar">
 
     </android.support.v7.widget.RecyclerView>
 

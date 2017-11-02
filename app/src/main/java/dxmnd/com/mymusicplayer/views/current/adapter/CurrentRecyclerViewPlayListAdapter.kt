@@ -43,7 +43,7 @@ class CurrentRecyclerViewPlayListAdapter(private val context: Context) : Recycle
 
     override fun getItem(position: Int): CurrentMusicItem = currentItemList[position]
 
-    override fun addItem(musciItem: CurrentMusicItem) {
-        currentItemList.add(musciItem)
+    override fun addItem(musicItem: CurrentMusicItem) {
+        currentItemList.add(musicItem)
     }
 }
