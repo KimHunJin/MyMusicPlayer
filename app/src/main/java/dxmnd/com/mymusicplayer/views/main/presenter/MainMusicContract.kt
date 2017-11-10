@@ -1,5 +1,6 @@
 package dxmnd.com.mymusicplayer.views.main.presenter
 
+import dxmnd.com.mymusicplayer.datas.media.MediaItem
 import dxmnd.com.mymusicplayer.views.main.adapter.models.MainRecyclerViewModel
 
 /**
@@ -15,6 +16,8 @@ interface MainMusicContract {
 
         fun onSuccessRemoveItem()
 
+        fun onBindService()
+
     }
 
     interface Presenter {
@@ -23,7 +26,7 @@ interface MainMusicContract {
 
         var mainModel : MainRecyclerViewModel?
 
-        fun loadDefaultItems()
+        fun loadDefaultItems(mediaList: List<MediaItem>)
 
         fun mainAdapterAddItem()
 

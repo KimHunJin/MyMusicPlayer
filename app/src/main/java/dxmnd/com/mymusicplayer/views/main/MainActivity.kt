@@ -1,34 +1,44 @@
 package dxmnd.com.mymusicplayer.views.main
 
 import android.Manifest
-import android.content.pm.PackageManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
 import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.widget.Toast
 import dxmnd.com.mymusicplayer.R
 import dxmnd.com.mymusicplayer.datas.media.MediaItem
+import dxmnd.com.mymusicplayer.service.MusicService
 import dxmnd.com.mymusicplayer.utils.ReadMusicFile
 import dxmnd.com.mymusicplayer.views.main.adapter.MainRecyclerViewMusicAdapter
 import dxmnd.com.mymusicplayer.views.main.presenter.MainMusicContract
 import dxmnd.com.mymusicplayer.views.main.presenter.MainMusicPresenter
+import dxmnd.com.mymusicplayer.views.permission.BaseActivity
+import dxmnd.com.mymusicplayer.views.permission.utils.REQUEST_PERMISSION_READ_EXTERNAL_STORAGE
 
-class MainActivity : AppCompatActivity(), MainMusicContract.View {
 
+class MainActivity : BaseActivity(), MainMusicContract.View, ServiceConnection {
+
+
+    companion object {
+        private val TAG: String = MainActivity.javaClass.simpleName
+    }
 
     private val rcvMainMusicList by lazy { findViewById(R.id.rcv_main_music_list) as RecyclerView }
     private val fabMainMusicAdd by lazy { findViewById(R.id.fab_main_music_add) as FloatingActionButton }
     private val toolbarMain by lazy { findViewById(R.id.toolbar_main) as Toolbar }
 
     private var mainMusicAdapter: MainRecyclerViewMusicAdapter? = null
-    private var Presenter: MainMusicContract.Presenter? = null
+    private var presenter: MainMusicContract.Presenter? = null
 
+    private var isBind: Boolean = false
+
+    private var bindService: MusicService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,70 +49,60 @@ class MainActivity : AppCompatActivity(), MainMusicContract.View {
         initialize()
     }
 
+
     override fun onStart() {
         super.onStart()
-        readPermission()
+        val readExternalStoragePermission: String = Manifest.permission.READ_EXTERNAL_STORAGE
+        if (hasPermission(readExternalStoragePermission)) {
+            event()
+        } else {
+            requestPermissionSafely(arrayOf(readExternalStoragePermission), REQUEST_PERMISSION_READ_EXTERNAL_STORAGE)
+        }
+    }
+
+
+    override fun onBindService() {
+        val intent = MusicService.newIntent(this)
+        bindService(intent, this, Context.BIND_AUTO_CREATE)
+    }
+
+
+    override fun onServiceDisconnected(name: ComponentName?) {
+        isBind = false
+    }
+
+    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+        var binder: MusicService.MusicServiceBinder = service as MusicService.MusicServiceBinder
+        bindService = binder.getService()
+        isBind = true
     }
 
     private fun initialize() {
 
-        Presenter = MainMusicPresenter()
-        Presenter?.view = this
+        presenter = MainMusicPresenter()
+        presenter?.view = this
 
         mainMusicAdapter = MainRecyclerViewMusicAdapter(this)
 
-        Presenter?.mainModel = mainMusicAdapter
+        presenter?.mainModel = mainMusicAdapter
 
         rcvMainMusicList.setHasFixedSize(true)
         rcvMainMusicList.layoutManager = LinearLayoutManager(this)
         rcvMainMusicList.adapter = mainMusicAdapter
 
         mainMusicAdapter?.setOnClickListener {
-            Presenter?.mainAdapterItemClick(it)
+            presenter?.mainAdapterItemClick(it)
         }
 
         fabMainMusicAdd.setOnClickListener {
-            Presenter?.mainAdapterAddItem()
-        }
 
-        Presenter?.loadDefaultItems()
+        }
     }
 
-
-
-    // TODO : change MVP
-    private fun addItemLocalDataMusicList() {
-
+    override fun event() {
+        super.event()
         val mediaList: List<MediaItem> = ReadMusicFile(this).getMediaList()
-        mediaList.forEach { it -> Log.e("main", it.title + " " + it.artist) }
-    }
-
-    private fun readPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 300)
-
-            } else {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 300)
-            }
-        } else {
-            addItemLocalDataMusicList()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            300 -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    addItemLocalDataMusicList()
-                } else {
-                    Toast.makeText(applicationContext, "권한 동의 하세요.", Toast.LENGTH_SHORT).show()
-                }
-                return
-            }
-        }
+        presenter?.loadDefaultItems(mediaList)
     }
 
 
@@ -116,4 +116,13 @@ class MainActivity : AppCompatActivity(), MainMusicContract.View {
 
     override fun onSuccessRemoveItem() {
     }
+
+    override fun onStop() {
+        if (isBind) {
+            unbindService(this)
+            isBind = false
+        }
+        super.onStop()
+    }
+
 }

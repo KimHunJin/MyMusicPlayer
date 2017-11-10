@@ -1,7 +1,9 @@
 package dxmnd.com.mymusicplayer.views.main.presenter
 
+import android.content.Intent
 import dxmnd.com.mymusicplayer.views.main.adapter.models.MainRecyclerViewModel
 import dxmnd.com.mymusicplayer.datas.main.MainMusicItem
+import dxmnd.com.mymusicplayer.datas.media.MediaItem
 
 /**
  * Created by HunJin on 2017-09-04.
@@ -19,10 +21,9 @@ class MainMusicPresenter : MainMusicContract.Presenter {
 
     private var count = 0
 
-    override fun loadDefaultItems() {
-        for (position in 0..5) {
-            mainModel?.addItem(MainMusicItem(count++, "알 수 없는 제목", "알 수 없는 아티스트", null))
-        }
+    override fun loadDefaultItems(mediaList: List<MediaItem>) {
+
+        mediaList.forEach { it -> mainModel?.addItem(MainMusicItem(count++, it.title, it.artist, it.thumbnailImagePath)) }
 
         view?.mainAdapterNotify()
     }
@@ -37,6 +38,8 @@ class MainMusicPresenter : MainMusicContract.Presenter {
         mainModel?.getItem(position)?.let {
             it.isItemSelected = !it.isItemSelected
             view?.mainAdapterNotify()
+
+            view?.onBindService()
         }
     }
 

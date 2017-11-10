@@ -5,6 +5,7 @@ import android.support.v7.widget.PopupMenu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.bumptech.glide.Glide
 import dxmnd.com.mymusicplayer.R
 import dxmnd.com.mymusicplayer.adapters.BaseViewHolder
 import dxmnd.com.mymusicplayer.datas.main.MainMusicItem
@@ -42,6 +43,7 @@ class MainRecyclerViewMusicViewHolder(context: Context, parent: ViewGroup?, priv
 
             itemView.txt_rcv_item_main_info_music_title.text = item.title
             itemView.txt_rcv_item_main_info_music_artist.text = item.artist
+            Glide.with(context).load(item.thumbNail).into(itemView.img_rcv_item_main_info_thumbnail)
         }
     }
 }

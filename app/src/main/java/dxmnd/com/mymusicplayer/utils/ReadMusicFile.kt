@@ -73,9 +73,8 @@ class ReadMusicFile(private var context: Context) {
 
     }
 
-    @SuppressLint("Recycle")
     private fun albumArt(): Map<Int, String> {
-        val map: Map<Int, String> = HashMap()
+        val map: MutableMap<Int, String> = HashMap()
 
         val list: Array<String> = Array(2, init = { "" })
         list[0] = MediaStore.Audio.Albums._ID
@@ -85,21 +84,23 @@ class ReadMusicFile(private var context: Context) {
         val cursor: Cursor = context.contentResolver.query(
                 MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                 list, null, null, null
-        ) ?: return map
+        )
 
-        if (cursor.moveToFirst()) {
-            val albumArt: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART)
-            val albumId: Int = cursor.getColumnIndex(MediaStore.Audio.Albums._ID)
-
-            do {
-                val key: Int = cursor.getString(albumId).toInt()
-                val value: String = cursor.getString(albumArt)
-                if (!map.containsKey(key)) {
-                    map.plus(hashMapOf(Pair(key, value)))
-                }
-            } while (cursor.moveToNext())
-            cursor.close()
+        cursor.let {
+            if (cursor.moveToFirst()) {
+                val albumArt: Int = cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART)
+                val albumId: Int = cursor.getColumnIndex(MediaStore.Audio.Albums._ID)
+                do {
+                    val key: Int = cursor.getString(albumId).toInt()
+                    val value: String = cursor.getString(albumArt)
+                    if (!map.containsKey(key)) {
+                        map.put(key, value)
+                    }
+                } while (cursor.moveToNext())
+                cursor.close()
+            }
         }
+
         return map
     }
 }
