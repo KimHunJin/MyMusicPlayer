@@ -1,6 +1,7 @@
 package dxmnd.com.mymusicplayer.views.main.presenter
 
 import dxmnd.com.mymusicplayer.datas.media.MediaItem
+import dxmnd.com.mymusicplayer.service.MusicService
 import dxmnd.com.mymusicplayer.views.main.adapter.models.MainRecyclerViewModel
 
 /**
@@ -16,7 +17,7 @@ interface MainMusicContract {
 
         fun onSuccessRemoveItem()
 
-        fun onBindService()
+        fun onBindService(id: String)
 
     }
 
@@ -24,7 +25,7 @@ interface MainMusicContract {
 
         var view: View?
 
-        var mainModel : MainRecyclerViewModel?
+        var mainModel: MainRecyclerViewModel?
 
         fun loadDefaultItems(mediaList: List<MediaItem>)
 
@@ -35,6 +36,5 @@ interface MainMusicContract {
         fun mainAdapterRemoveItem()
 
         fun mainAdapterMoreItemClick(position: Int, order: Int)
-
     }
 }

@@ -31,8 +31,8 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
 
     private val binder: IBinder = MusicServiceBinder()
 
-    private var player: MediaPlayer? = MediaPlayer()
-    private var audioManager: AudioManager? = null
+    private var player: MediaPlayer = MediaPlayer()
+    private lateinit var audioManager: AudioManager
 
     open class MusicServiceBinder : Binder() {
         fun getService(): MusicService = MusicService()
@@ -46,26 +46,30 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
             player = MediaPlayer()
         }
 
-        player?.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
-        player?.setAudioStreamType(AudioManager.STREAM_MUSIC)
+        player.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
+        player.setAudioStreamType(AudioManager.STREAM_MUSIC)
 
-        player?.setOnCompletionListener(this)
-        player?.setOnBufferingUpdateListener(this)
-        player?.setOnErrorListener(this)
-        player?.setOnInfoListener(this)
-        player?.setOnPreparedListener(this)
-        player?.setOnSeekCompleteListener(this)
+        player.setOnCompletionListener(this)
+        player.setOnBufferingUpdateListener(this)
+        player.setOnErrorListener(this)
+        player.setOnInfoListener(this)
+        player.setOnPreparedListener(this)
+        player.setOnSeekCompleteListener(this)
 
-        player?.reset()
+        player.reset()
+
+        Log.e(TAG, "init")
     }
 
-    private fun startMusic(id: String) {
+    fun startMusic(id: String) {
         if (requestAudioFocus()) {
+            Log.e(TAG, "requestAudioFocus is " + requestAudioFocus())
             stopSelf()
         } else {
-            val musicUri = Uri.withAppendedPath(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id)
-            player?.setDataSource(applicationContext, musicUri)
-            player?.prepareAsync()
+
+            val musicUri: Uri = Uri.withAppendedPath(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id)
+            player.setDataSource(MusicService().applicationContext, musicUri)
+            player.prepareAsync()
         }
     }
 
@@ -96,37 +100,34 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
     override fun onAudioFocusChange(focusChange: Int) {
         when (focusChange) {
             AudioManager.AUDIOFOCUS_GAIN -> {
-                if (player == null) {
-                    player = MediaPlayer()
-                }
+                player = MediaPlayer()
                 player.let {
-                    if (player!!.isPlaying) {
-                        player?.stop()
+                    if (player.isPlaying) {
+                        player.stop()
                     }
-                    player?.setVolume(1.0f, 1.0f)
+                    player.setVolume(1.0f, 1.0f)
                 }
 
             }
             AudioManager.AUDIOFOCUS_LOSS -> {
-                player?.let {
-                    if (player!!.isPlaying) {
-                        player?.stop()
+                player.let {
+                    if (player.isPlaying) {
+                        player.stop()
                     }
-                    player?.release()
-                    player = null
+                    player.release()
                 }
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
-                player?.let {
-                    if (player!!.isPlaying) {
-                        player?.pause()
+                player.let {
+                    if (player.isPlaying) {
+                        player.pause()
                     }
                 }
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
-                player?.let {
-                    if (player!!.isPlaying) {
-                        player?.setVolume(0.1f, 0.1f)
+                player.let {
+                    if (player.isPlaying) {
+                        player.setVolume(0.1f, 0.1f)
                     }
                 }
             }
@@ -134,15 +135,17 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
     }
 
     private fun requestAudioFocus(): Boolean {
+        // 정상 작동
+        Log.e(TAG,"requestFocus Context : " + this.toString())
+        // 펑
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        var result: Int? = audioManager?.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
+        val result: Int? = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             return true
         }
         return false
     }
 
-    private fun removeAudioFocus(): Boolean = AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioManager?.abandonAudioFocus(this)
-
+    private fun removeAudioFocus(): Boolean = AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioManager.abandonAudioFocus(this)
 
 }

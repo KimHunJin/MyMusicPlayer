@@ -1,9 +1,8 @@
 package dxmnd.com.mymusicplayer.views.main.presenter
 
-import android.content.Intent
-import dxmnd.com.mymusicplayer.views.main.adapter.models.MainRecyclerViewModel
 import dxmnd.com.mymusicplayer.datas.main.MainMusicItem
 import dxmnd.com.mymusicplayer.datas.media.MediaItem
+import dxmnd.com.mymusicplayer.views.main.adapter.models.MainRecyclerViewModel
 
 /**
  * Created by HunJin on 2017-09-04.
@@ -39,9 +38,10 @@ class MainMusicPresenter : MainMusicContract.Presenter {
             it.isItemSelected = !it.isItemSelected
             view?.mainAdapterNotify()
 
-            view?.onBindService()
+            view?.onBindService(it.id.toString())
         }
     }
+
 
     override fun mainAdapterMoreItemClick(position: Int, order: Int) {
         mainModel?.getItem(position)?.let {

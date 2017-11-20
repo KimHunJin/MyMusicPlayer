@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.widget.Toast
 import dxmnd.com.mymusicplayer.R
 import dxmnd.com.mymusicplayer.datas.media.MediaItem
@@ -26,7 +27,7 @@ class MainActivity : BaseActivity(), MainMusicContract.View, ServiceConnection {
 
 
     companion object {
-        private val TAG: String = MainActivity.javaClass.simpleName
+        private val TAG: String = MainActivity::class.java.simpleName
     }
 
     private val rcvMainMusicList by lazy { findViewById(R.id.rcv_main_music_list) as RecyclerView }
@@ -38,7 +39,7 @@ class MainActivity : BaseActivity(), MainMusicContract.View, ServiceConnection {
 
     private var isBind: Boolean = false
 
-    private var bindService: MusicService? = null
+    private lateinit var bindService: MusicService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,9 +62,11 @@ class MainActivity : BaseActivity(), MainMusicContract.View, ServiceConnection {
     }
 
 
-    override fun onBindService() {
+    private var id: String = ""
+    override fun onBindService(id: String) {
         val intent = MusicService.newIntent(this)
         bindService(intent, this, Context.BIND_AUTO_CREATE)
+        this.id = id
     }
 
 
@@ -72,9 +75,14 @@ class MainActivity : BaseActivity(), MainMusicContract.View, ServiceConnection {
     }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        var binder: MusicService.MusicServiceBinder = service as MusicService.MusicServiceBinder
+        if (isBind) {
+            return
+        }
+        val binder: MusicService.MusicServiceBinder = service as MusicService.MusicServiceBinder
         bindService = binder.getService()
         isBind = true
+        Log.e(TAG, bindService.toString())
+        bindService.startMusic(id)
     }
 
     private fun initialize() {
