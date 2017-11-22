@@ -22,7 +22,7 @@ class MainMusicPresenter : MainMusicContract.Presenter {
 
     override fun loadDefaultItems(mediaList: List<MediaItem>) {
 
-        mediaList.forEach { it -> mainModel?.addItem(MainMusicItem(count++, it.title, it.artist, it.thumbnailImagePath)) }
+        mediaList.forEach { it -> mainModel?.addItem(MainMusicItem(it.id, it.title, it.artist, it.thumbnailImagePath)) }
 
         view?.mainAdapterNotify()
     }
@@ -38,7 +38,11 @@ class MainMusicPresenter : MainMusicContract.Presenter {
             it.isItemSelected = !it.isItemSelected
             view?.mainAdapterNotify()
 
-            view?.onBindService(it.id.toString())
+            if(view?.isBind!!) {
+                view?.onStartMusic(it.id.toString())
+            } else{
+                view?.onBindService(it.id.toString())
+            }
         }
     }
 

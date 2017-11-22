@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
+import android.util.Log
 import dxmnd.com.mymusicplayer.datas.media.MediaItem
 
 /**

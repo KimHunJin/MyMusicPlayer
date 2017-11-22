@@ -3,6 +3,7 @@ package dxmnd.com.mymusicplayer.views.main
 import android.Manifest
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
@@ -26,6 +27,8 @@ import dxmnd.com.mymusicplayer.views.permission.utils.REQUEST_PERMISSION_READ_EX
 class MainActivity : BaseActivity(), MainMusicContract.View, ServiceConnection {
 
 
+    override var isBind: Boolean = false
+
     companion object {
         private val TAG: String = MainActivity::class.java.simpleName
     }
@@ -37,9 +40,7 @@ class MainActivity : BaseActivity(), MainMusicContract.View, ServiceConnection {
     private var mainMusicAdapter: MainRecyclerViewMusicAdapter? = null
     private var presenter: MainMusicContract.Presenter? = null
 
-    private var isBind: Boolean = false
-
-    private lateinit var bindService: MusicService
+    private var bindService: MusicService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,15 +62,6 @@ class MainActivity : BaseActivity(), MainMusicContract.View, ServiceConnection {
         }
     }
 
-
-    private var id: String = ""
-    override fun onBindService(id: String) {
-        val intent = MusicService.newIntent(this)
-        bindService(intent, this, Context.BIND_AUTO_CREATE)
-        this.id = id
-    }
-
-
     override fun onServiceDisconnected(name: ComponentName?) {
         isBind = false
     }
@@ -82,7 +74,6 @@ class MainActivity : BaseActivity(), MainMusicContract.View, ServiceConnection {
         bindService = binder.getService()
         isBind = true
         Log.e(TAG, bindService.toString())
-        bindService.startMusic(id)
     }
 
     private fun initialize() {
@@ -113,6 +104,15 @@ class MainActivity : BaseActivity(), MainMusicContract.View, ServiceConnection {
         presenter?.loadDefaultItems(mediaList)
     }
 
+    override fun onStartMusic(id: String) {
+        bindService?.startMusic(id)
+    }
+
+    override fun onBindService(id: String) {
+        val intent = Intent(this, MusicService::class.java)
+        bindService(intent, this, Context.BIND_AUTO_CREATE)
+    }
+
 
     override fun mainAdapterNotify() {
         mainMusicAdapter?.notifyDataSetChanged()
@@ -132,5 +132,6 @@ class MainActivity : BaseActivity(), MainMusicContract.View, ServiceConnection {
         }
         super.onStop()
     }
+
 
 }

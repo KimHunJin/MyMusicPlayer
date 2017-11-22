@@ -11,6 +11,8 @@ import dxmnd.com.mymusicplayer.views.main.adapter.models.MainRecyclerViewModel
 interface MainMusicContract {
     interface View {
 
+        var isBind : Boolean
+
         fun mainAdapterNotify()
 
         fun onSuccessAddItem(position: Int)
@@ -18,6 +20,8 @@ interface MainMusicContract {
         fun onSuccessRemoveItem()
 
         fun onBindService(id: String)
+
+        fun onStartMusic(id: String)
 
     }
 
