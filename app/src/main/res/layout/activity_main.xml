@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="dxmnd.com.mymusicplayer.views.main.MainActivity">
+    tools:context="dxmnd.com.mymusicplayer.main.view.MainActivity">
 
     <include
         android:id="@+id/layout_main_toolbar"
